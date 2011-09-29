@@ -155,4 +155,42 @@ Public NotInheritable Class Log
             Return _categories
         End Get
     End Property
+
+#Region "Low Level API"
+
+    ''' <summary>
+    ''' Creates a log entry with a message and severity
+    ''' </summary>
+    ''' <param name="message">Message to log</param>
+    ''' <param name="severity">Severity</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function CreateLogEntry(ByVal message As String, ByVal severity As TraceEventType) As LogEntry
+
+        Dim entry As LogEntry = New LogEntry()
+
+        entry.Message = message
+        entry.Severity = severity
+        entry.Categories = New List(Of String)(_categories)
+        'entry.Priority = _priority
+        Return entry
+
+    End Function
+
+    ''' <summary>
+    ''' Write a log entry
+    ''' </summary>
+    ''' <param name="entry"></param>
+    ''' <remarks></remarks>
+    Public Sub WriteLogEntry(ByVal entry As LogEntry)
+
+        ' logger is not available
+        If _writer Is Nothing Then
+            Exit Sub
+        End If
+
+        _writer.Write(entry)
+    End Sub
+
+#End Region
 End Class
