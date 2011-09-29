@@ -93,8 +93,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryAttribute.vb" />
+    <Compile Include="ILogger.vb" />
     <Compile Include="Log.vb" />
-    <Compile Include="LogOptions.vb" />
+    <Compile Include="LoggerImpl.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -110,6 +111,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Priority.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

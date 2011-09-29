@@ -6,6 +6,7 @@ Imports Microsoft.Practices.EnterpriseLibrary.Logging
 ''' </summary>
 ''' <remarks></remarks>
 Public NotInheritable Class Log
+    Implements ILogger
 
 #Region "Shared/Static API"
 
@@ -103,24 +104,8 @@ Public NotInheritable Class Log
                 Return _namedLogs.Item(typeName)
             End If
 
-            Dim log As New Log(type)
-
-            For Each assAttr In Attribute.GetCustomAttributes(type.Assembly)
-                If TypeOf assAttr Is CategoryAttribute Then
-                    Dim attrCustom As CategoryAttribute = CType(assAttr, CategoryAttribute)
-                    log.Categories.Add(attrCustom.Name)
-                End If
-            Next
-
-            ' Iterate through all the attributes of the type
-            For Each classAttr In Attribute.GetCustomAttributes(type)
-                If TypeOf classAttr Is CategoryAttribute Then
-                    Dim attrCustom As CategoryAttribute = CType(classAttr, CategoryAttribute)
-                    log.Categories.Add(attrCustom.Name)
-                End If
-            Next
-
             ' return log
+            Dim log As New Log(type)
             _namedLogs.Add(typeName, log)
             Return log
         Else
@@ -128,7 +113,14 @@ Public NotInheritable Class Log
             Return [Default]()
         End If
     End Function
+
 #End Region
+
+    ''' <summary>
+    ''' Type
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private _typeContext As Type
 
     ''' <summary>
     ''' An array of category names
@@ -141,41 +133,37 @@ Public NotInheritable Class Log
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub New(ByVal type As Type)
+        _typeContext = type
         _categories = New List(Of String)()
+        For Each assAttr In Attribute.GetCustomAttributes(type.Assembly)
+            If TypeOf assAttr Is CategoryAttribute Then
+                Dim attrCustom As CategoryAttribute = CType(assAttr, CategoryAttribute)
+                _categories.Add(attrCustom.Name)
+            End If
+        Next
+
+        ' Iterate through all the attributes of the type
+        For Each classAttr In Attribute.GetCustomAttributes(type)
+            If TypeOf classAttr Is CategoryAttribute Then
+                Dim attrCustom As CategoryAttribute = CType(classAttr, CategoryAttribute)
+                _categories.Add(attrCustom.Name)
+            End If
+        Next
     End Sub
 
     ''' <summary>
-    ''' Returns a list of category names
+    ''' Returns the type context of logging
     ''' </summary>
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public ReadOnly Property Categories As ICollection(Of String)
+    Public ReadOnly Property TypeContext As Type
         Get
-            Return _categories
+            Return _typeContext
         End Get
     End Property
 
 #Region "Low Level API"
-
-    ''' <summary>
-    ''' Creates a log entry with a message and severity
-    ''' </summary>
-    ''' <param name="message">Message to log</param>
-    ''' <param name="severity">Severity</param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Function CreateLogEntry(ByVal message As String, ByVal severity As TraceEventType) As LogEntry
-
-        Dim entry As LogEntry = New LogEntry()
-
-        entry.Message = message
-        entry.Severity = severity
-        entry.Categories = New List(Of String)(_categories)
-        'entry.Priority = _priority
-        Return entry
-
-    End Function
 
     ''' <summary>
     ''' Write a log entry
@@ -189,18 +177,61 @@ Public NotInheritable Class Log
             Exit Sub
         End If
 
+        ' Add categories
+        If _categories.Count > 0 Then
+            Dim categories As New List(Of String)(_categories.ToArray)
+            If entry.Categories IsNot Nothing Then
+                categories.AddRange(entry.Categories)
+            End If
+            entry.Categories = categories
+        End If
         _writer.Write(entry)
     End Sub
 
 #End Region
 
-    ''' <summary>
-    ''' Returns an option object that will be used in a fluent configuration style
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Function WithOptions() As LogOptions
-        Return New LogOptions(Me)
+    Public Sub Critical(ByVal ParamArray message() As Object) Implements ILogger.Critical
+        Dim loggerimpl = New LoggerImpl(Me)
+        loggerimpl.Critical(message)
+    End Sub
+
+    Public Sub [Error](ByVal ParamArray message() As Object) Implements ILogger.Error
+        Dim loggerimpl = New LoggerImpl(Me)
+        loggerimpl.[Error](message)
+    End Sub
+
+    Public Sub Information(ByVal ParamArray message() As Object) Implements ILogger.Information
+        Dim loggerimpl = New LoggerImpl(Me)
+        loggerimpl.Information(message)
+    End Sub
+
+    Public Sub Verbose(ByVal ParamArray message() As Object) Implements ILogger.Verbose
+        Dim loggerimpl = New LoggerImpl(Me)
+        loggerimpl.Verbose(message)
+    End Sub
+
+    Public Sub Warning(ByVal ParamArray message() As Object) Implements ILogger.Warning
+        Dim loggerimpl = New LoggerImpl(Me)
+        loggerimpl.Warning(message)
+    End Sub
+
+    Public Function WithCategories(ByVal ParamArray category() As String) As ILogger Implements ILogger.WithCategories
+        Return New LoggerImpl(Me).WithCategories(category)
     End Function
 
+    Public Function WithExtendedProperties(ByVal properties As System.Collections.Generic.IDictionary(Of String, Object)) As ILogger Implements ILogger.WithExtendedProperties
+        Return New LoggerImpl(Me).WithExtendedProperties(properties)
+    End Function
+
+    Public Function WithFormat(ByVal format As String) As ILogger Implements ILogger.WithFormat
+        Return New LoggerImpl(Me).WithFormat(format)
+    End Function
+
+    Public Function WithFormat(ByVal formatProvider As System.IFormatProvider, ByVal format As String) As ILogger Implements ILogger.WithFormat
+        Return New LoggerImpl(Me).WithFormat(formatProvider, format)
+    End Function
+
+    Public Function WithPriority(ByVal priority As Priority) As ILogger Implements ILogger.WithPriority
+        Return New LoggerImpl(Me).WithPriority(priority)
+    End Function
 End Class
