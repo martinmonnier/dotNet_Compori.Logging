@@ -193,4 +193,14 @@ Public NotInheritable Class Log
     End Sub
 
 #End Region
+
+    ''' <summary>
+    ''' Returns an option object that will be used in a fluent configuration style
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function WithOptions() As LogOptions
+        Return New LogOptions(Me)
+    End Function
+
 End Class
