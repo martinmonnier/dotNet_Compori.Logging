@@ -1,0 +1,5 @@
+==Logging Facade vor Microsoft Enterprise Library Logging Block==
+
+===Usage===
+
+Log.For(Me).WithPriority(Priority.Low).Verbose("Hello out there")
