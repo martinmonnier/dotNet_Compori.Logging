@@ -7,7 +7,7 @@ Public Class LoggerImpl
     ''' Log Writer
     ''' </summary>
     ''' <remarks></remarks>
-    Private _log As Log
+    Private _writer As ILogWriter
 
     ''' <summary>
     ''' An array of category names
@@ -18,11 +18,11 @@ Public Class LoggerImpl
     ''' <summary>
     ''' Creates the log options
     ''' </summary>
-    ''' <param name="log"></param>
+    ''' <param name="writer"></param>
     ''' <remarks></remarks>
-    Friend Sub New(ByVal log As Log)
+    Public Sub New(ByVal writer As ILogWriter)
 
-        _log = log
+        _writer = writer
         _categories = New List(Of String)()
 
         ' Setup default values
@@ -79,7 +79,7 @@ Public Class LoggerImpl
             entry.ExtendedProperties = Me.ExtendedProperties
         End If
 
-        _log.WriteLogEntry(entry)
+        _writer.Write(entry)
     End Sub
 
     ''' <summary>

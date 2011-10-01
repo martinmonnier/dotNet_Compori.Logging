@@ -6,7 +6,7 @@ Imports Microsoft.Practices.EnterpriseLibrary.Logging
 ''' </summary>
 ''' <remarks></remarks>
 Public NotInheritable Class Log
-    Implements ILogger
+    Implements ILogger, ILogWriter
 
 #Region "Shared/Static API"
 
@@ -170,7 +170,7 @@ Public NotInheritable Class Log
     ''' </summary>
     ''' <param name="entry"></param>
     ''' <remarks></remarks>
-    Public Sub WriteLogEntry(ByVal entry As LogEntry)
+    Public Sub Write(ByVal entry As LogEntry) Implements ILogWriter.Write
 
         ' logger is not available
         If _writer Is Nothing Then
@@ -234,4 +234,5 @@ Public NotInheritable Class Log
     Public Function WithPriority(ByVal priority As Priority) As ILogger Implements ILogger.WithPriority
         Return New LoggerImpl(Me).WithPriority(priority)
     End Function
+
 End Class
