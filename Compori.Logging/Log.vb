@@ -67,7 +67,7 @@ Public NotInheritable Class Log
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared ReadOnly Property [Default]() As Log
+    Public Shared ReadOnly Property [Default]() As ILogger
         Get
             Return _defaultLog
         End Get
@@ -80,7 +80,7 @@ Public NotInheritable Class Log
     ''' <param name="obj"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function [For](ByVal obj As Object) As Log
+    Public Shared Function [For](ByVal obj As Object) As ILogger
         If obj IsNot Nothing Then
             Return [For](obj.GetType())
         Else
@@ -95,7 +95,7 @@ Public NotInheritable Class Log
     ''' <param name="type"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function [For](ByVal type As Type) As Log
+    Public Shared Function [For](ByVal type As Type) As ILogger
         If type IsNot Nothing Then
 
             ' log object already created
