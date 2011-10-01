@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="CategoryAttribute.vb" />
     <Compile Include="ILogger.vb" />
+    <Compile Include="ILogWriter.vb" />
     <Compile Include="Log.vb" />
     <Compile Include="LoggerImpl.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
