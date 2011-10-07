@@ -6,7 +6,7 @@ Imports Microsoft.Practices.EnterpriseLibrary.Logging
 ''' </summary>
 ''' <remarks></remarks>
 Public NotInheritable Class Log
-    Implements ILogger, ILogWriter
+    Implements ILogger, IWriter
 
 #Region "Shared/Static API"
 
@@ -62,6 +62,15 @@ Public NotInheritable Class Log
     End Sub
 
     ''' <summary>
+    ''' Creates a log entry object
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function CreateEntry() As IEntry
+        Return New EntryImpl()
+    End Function
+
+    ''' <summary>
     ''' Returns the default Log object
     ''' </summary>
     ''' <value></value>
@@ -114,6 +123,7 @@ Public NotInheritable Class Log
         End If
     End Function
 
+
 #End Region
 
     ''' <summary>
@@ -152,6 +162,33 @@ Public NotInheritable Class Log
     End Sub
 
     ''' <summary>
+    ''' Returns an array of preset categories
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public ReadOnly Property Categories() As String()
+        Get
+            Return _categories.ToArray()
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a logger instance
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function _GetLoggerInstance() As ILogger
+        Dim logger As ILogger = CType(New LoggerImpl(Me), ILogger)
+
+        ' Insert categories definied by attributes
+        If _categories.Count > 0 Then
+            logger.WithCategories(_categories.ToArray())
+        End If
+        Return logger
+    End Function
+
+    ''' <summary>
     ''' Returns the type context of logging
     ''' </summary>
     ''' <value></value>
@@ -163,76 +200,124 @@ Public NotInheritable Class Log
         End Get
     End Property
 
-#Region "Low Level API"
+
+#Region "IWriter Implementation"
 
     ''' <summary>
-    ''' Write a log entry
+    ''' Writes a log entry
     ''' </summary>
     ''' <param name="entry"></param>
     ''' <remarks></remarks>
-    Public Sub Write(ByVal entry As LogEntry) Implements ILogWriter.Write
+    Public Sub Write(ByVal entry As IEntry) Implements IWriter.Write
 
         ' logger is not available
         If _writer Is Nothing Then
             Exit Sub
         End If
 
-        ' Add categories
-        If _categories.Count > 0 Then
-            Dim categories As New List(Of String)(_categories.ToArray)
-            If entry.Categories IsNot Nothing Then
-                categories.AddRange(entry.Categories)
-            End If
-            entry.Categories = categories
-        End If
+        ' Add categories        
         _writer.Write(entry)
     End Sub
 
 #End Region
 
-    Public Sub Critical(ByVal ParamArray message() As Object) Implements ILogger.Critical
-        Dim loggerimpl = New LoggerImpl(Me)
-        loggerimpl.Critical(message)
+#Region "ILogger Implementation"
+
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="message"></param>
+    ''' <remarks></remarks>
+    Private Sub _Critical(ByVal ParamArray message() As Object) Implements ILogger.Critical
+        _GetLoggerInstance.Critical(message)
     End Sub
 
-    Public Sub [Error](ByVal ParamArray message() As Object) Implements ILogger.Error
-        Dim loggerimpl = New LoggerImpl(Me)
-        loggerimpl.[Error](message)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="message"></param>
+    ''' <remarks></remarks>
+    Private Sub _Error(ByVal ParamArray message() As Object) Implements ILogger.Error
+        _GetLoggerInstance.Error(message)
     End Sub
 
-    Public Sub Information(ByVal ParamArray message() As Object) Implements ILogger.Information
-        Dim loggerimpl = New LoggerImpl(Me)
-        loggerimpl.Information(message)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="message"></param>
+    ''' <remarks></remarks>
+    Private Sub _Information(ByVal ParamArray message() As Object) Implements ILogger.Information
+        _GetLoggerInstance.Information(message)
     End Sub
 
-    Public Sub Verbose(ByVal ParamArray message() As Object) Implements ILogger.Verbose
-        Dim loggerimpl = New LoggerImpl(Me)
-        loggerimpl.Verbose(message)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="message"></param>
+    ''' <remarks></remarks>
+    Private Sub _Verbose(ByVal ParamArray message() As Object) Implements ILogger.Verbose
+        _GetLoggerInstance.Verbose(message)
     End Sub
 
-    Public Sub Warning(ByVal ParamArray message() As Object) Implements ILogger.Warning
-        Dim loggerimpl = New LoggerImpl(Me)
-        loggerimpl.Warning(message)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="message"></param>
+    ''' <remarks></remarks>
+    Private Sub _Warning(ByVal ParamArray message() As Object) Implements ILogger.Warning
+        _GetLoggerInstance.Warning(message)
     End Sub
 
-    Public Function WithCategories(ByVal ParamArray category() As String) As ILogger Implements ILogger.WithCategories
-        Return New LoggerImpl(Me).WithCategories(category)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="category"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function _WithCategories(ByVal ParamArray category() As String) As ILogger Implements ILogger.WithCategories
+        Return _GetLoggerInstance.WithCategories(category)
     End Function
 
-    Public Function WithExtendedProperties(ByVal properties As System.Collections.Generic.IDictionary(Of String, Object)) As ILogger Implements ILogger.WithExtendedProperties
-        Return New LoggerImpl(Me).WithExtendedProperties(properties)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="properties"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function _WithExtendedProperties(ByVal properties As System.Collections.Generic.Dictionary(Of String, Object)) As ILogger Implements ILogger.WithExtendedProperties
+        Return _GetLoggerInstance.WithExtendedProperties(properties)
     End Function
 
-    Public Function WithFormat(ByVal format As String) As ILogger Implements ILogger.WithFormat
-        Return New LoggerImpl(Me).WithFormat(format)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="format"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function _WithFormat(ByVal format As String) As ILogger Implements ILogger.WithFormat
+        Return _GetLoggerInstance.WithFormat(format)
     End Function
 
-    Public Function WithFormat(ByVal formatProvider As System.IFormatProvider, ByVal format As String) As ILogger Implements ILogger.WithFormat
-        Return New LoggerImpl(Me).WithFormat(formatProvider, format)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="formatProvider"></param>
+    ''' <param name="format"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function _WithFormat(ByVal formatProvider As System.IFormatProvider, ByVal format As String) As ILogger Implements ILogger.WithFormat
+        Return _GetLoggerInstance.WithFormat(formatProvider, format)
     End Function
 
-    Public Function WithPriority(ByVal priority As Priority) As ILogger Implements ILogger.WithPriority
-        Return New LoggerImpl(Me).WithPriority(priority)
+    ''' <summary>
+    ''' Delegate
+    ''' </summary>
+    ''' <param name="priority"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function _WithPriority(ByVal priority As Priority) As ILogger Implements ILogger.WithPriority
+        Return _GetLoggerInstance.WithPriority(priority)
     End Function
+#End Region
 
 End Class

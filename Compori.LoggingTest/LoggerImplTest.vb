@@ -4,8 +4,7 @@ Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports Compori.Logging
 
 '''<summary>
-'''Dies ist eine Testklasse für "LoggerImplTest" und soll
-'''alle LoggerImplTest Komponententests enthalten.
+''' Dies ist eine Testklasse für "LoggerImplTest" und soll alle LoggerImplTest Komponententests enthalten.
 '''</summary>
 <TestClass()> _
 Public Class LoggerImplTest
@@ -58,11 +57,14 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub CriticalTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
+
+        Dim writer As LogWriterMock = New LogWriterMock()
+        Dim target As ILogger = New LoggerImpl(writer)
+        Dim message As String = "Critical Message"
         target.Critical(message)
-        Assert.Inconclusive("Eine Methode, die keinen Wert zurückgibt, kann nicht überprüft werden.")
+
+        Assert.AreEqual(TraceEventType.Critical, writer.LogEntry.Severity)
+        Assert.AreEqual(message, writer.LogEntry.Message)
     End Sub
 
     '''<summary>
@@ -70,7 +72,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub ErrorTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
         target.[Error](message)
@@ -82,7 +84,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub GetFormattedMessageTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
         Dim expected As String = String.Empty ' TODO: Passenden Wert initialisieren
@@ -97,7 +99,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub InformationTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
         target.Information(message)
@@ -109,7 +111,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub VerboseTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
         target.Verbose(message)
@@ -121,7 +123,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub WarningTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
         target.Warning(message)
@@ -133,7 +135,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub WithCategoriesTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim category() As String = Nothing ' TODO: Passenden Wert initialisieren
         Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
@@ -148,7 +150,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub WithExtendedPropertiesTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim properties As IDictionary(Of String, Object) = Nothing ' TODO: Passenden Wert initialisieren
         Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
@@ -163,7 +165,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub WithFormatTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim formatProvider As IFormatProvider = Nothing ' TODO: Passenden Wert initialisieren
         Dim format As String = String.Empty ' TODO: Passenden Wert initialisieren
@@ -179,7 +181,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub WithFormatTest1()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim format As String = String.Empty ' TODO: Passenden Wert initialisieren
         Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
@@ -194,7 +196,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub WithPriorityTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim priority As Priority = New Priority() ' TODO: Passenden Wert initialisieren
         Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
@@ -209,7 +211,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub CategoriesTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim actual As ICollection(Of String)
         actual = target.Categories
@@ -221,7 +223,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub ExtendedPropertiesTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim expected As Dictionary(Of String, Object) = Nothing ' TODO: Passenden Wert initialisieren
         Dim actual As Dictionary(Of String, Object)
@@ -236,7 +238,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub FormatTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim expected As String = String.Empty ' TODO: Passenden Wert initialisieren
         Dim actual As String
@@ -251,7 +253,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub FormatProviderTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim expected As IFormatProvider = Nothing ' TODO: Passenden Wert initialisieren
         Dim actual As IFormatProvider
@@ -266,7 +268,7 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub PriorityTest()
-        Dim writer As ILogWriter = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
         Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
         Dim expected As Priority = New Priority() ' TODO: Passenden Wert initialisieren
         Dim actual As Priority

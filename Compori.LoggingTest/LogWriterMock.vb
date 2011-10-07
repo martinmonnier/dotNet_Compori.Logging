@@ -1,11 +1,13 @@
 ﻿Imports Compori.Logging
 
 Public Class LogWriterMock
-    Implements ILogWriter
+    Implements IWriter
 
-    Public Property LogEntry
+    <CLSCompliant(False)>
+    Public Property LogEntry As IEntry
 
-    Public Sub Write(ByVal entry As Microsoft.Practices.EnterpriseLibrary.Logging.LogEntry) Implements Logging.ILogWriter.Write
+    <CLSCompliant(False)>
+    Public Sub Write(ByVal entry As Logging.IEntry) Implements Logging.IWriter.Write
         LogEntry = entry
     End Sub
 End Class

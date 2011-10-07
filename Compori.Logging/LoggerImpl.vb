@@ -1,13 +1,11 @@
-﻿Imports Microsoft.Practices.EnterpriseLibrary.Logging
-
-Public Class LoggerImpl
+﻿Public Class LoggerImpl
     Implements ILogger
 
     ''' <summary>
     ''' Log Writer
     ''' </summary>
     ''' <remarks></remarks>
-    Private _writer As ILogWriter
+    Private _writer As IWriter
 
     ''' <summary>
     ''' An array of category names
@@ -20,7 +18,7 @@ Public Class LoggerImpl
     ''' </summary>
     ''' <param name="writer"></param>
     ''' <remarks></remarks>
-    Public Sub New(ByVal writer As ILogWriter)
+    Public Sub New(ByVal writer As IWriter)
 
         _writer = writer
         _categories = New List(Of String)()
@@ -66,7 +64,7 @@ Public Class LoggerImpl
     ''' <remarks></remarks>
     Private Sub _Write(ByVal message As String, ByVal severity As TraceEventType)
 
-        Dim entry As LogEntry = New LogEntry()
+        Dim entry As IEntry = Log.CreateEntry()
         entry.Message = message
         entry.Severity = severity
         entry.Priority = Me.Priority
@@ -79,7 +77,7 @@ Public Class LoggerImpl
             entry.ExtendedProperties = Me.ExtendedProperties
         End If
 
-        _writer.Write(entry)
+        _writer.Write(CType(entry, IEntry))
     End Sub
 
     ''' <summary>
@@ -174,10 +172,11 @@ Public Class LoggerImpl
     ''' <param name="properties"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function WithExtendedProperties(ByVal properties As System.Collections.Generic.IDictionary(Of String, Object)) As ILogger Implements ILogger.WithExtendedProperties
+    Public Function WithExtendedProperties(ByVal properties As System.Collections.Generic.Dictionary(Of String, Object)) As ILogger Implements ILogger.WithExtendedProperties
         ExtendedProperties = properties
         Return Me
     End Function
+
 #Region "Verbs"
 
     ''' <summary>
@@ -185,7 +184,7 @@ Public Class LoggerImpl
     ''' </summary>
     ''' <param name="message"></param>
     ''' <remarks></remarks>
-    Public Sub Critical(ByVal ParamArray message() As Object) Implements ILogger.Critical
+    Private Sub _Critical(ByVal ParamArray message() As Object) Implements ILogger.Critical
         _Write(GetFormattedMessage(message), TraceEventType.Critical)
     End Sub
 
@@ -194,7 +193,7 @@ Public Class LoggerImpl
     ''' </summary>
     ''' <param name="message"></param>
     ''' <remarks></remarks>
-    Public Sub [Error](ByVal ParamArray message() As Object) Implements ILogger.Error
+    Private Sub _Error(ByVal ParamArray message() As Object) Implements ILogger.Error
         _Write(GetFormattedMessage(message), TraceEventType.Error)
     End Sub
 
@@ -203,7 +202,7 @@ Public Class LoggerImpl
     ''' </summary>
     ''' <param name="message"></param>
     ''' <remarks></remarks>
-    Public Sub Warning(ByVal ParamArray message() As Object) Implements ILogger.Warning
+    Private Sub _Warning(ByVal ParamArray message() As Object) Implements ILogger.Warning
         _Write(GetFormattedMessage(message), TraceEventType.Warning)
     End Sub
 
@@ -212,7 +211,7 @@ Public Class LoggerImpl
     ''' </summary>
     ''' <param name="message"></param>
     ''' <remarks></remarks>
-    Public Sub Information(ByVal ParamArray message() As Object) Implements ILogger.Information
+    Private Sub _Information(ByVal ParamArray message() As Object) Implements ILogger.Information
         _Write(GetFormattedMessage(message), TraceEventType.Information)
     End Sub
 
@@ -221,7 +220,7 @@ Public Class LoggerImpl
     ''' </summary>
     ''' <param name="message"></param>
     ''' <remarks></remarks>
-    Public Sub Verbose(ByVal ParamArray message() As Object) Implements ILogger.Verbose
+    Private Sub _Verbose(ByVal ParamArray message() As Object) Implements ILogger.Verbose
         _Write(GetFormattedMessage(message), TraceEventType.Verbose)
     End Sub
 
