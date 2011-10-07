@@ -1,0 +1,549 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Compori.Logging
+</name>
+</assembly>
+<members>
+<member name="P:Compori.Logging.IEntry.Categories">
+	<summary>
+ Category name used to route the log entry to a one or more trace listeners.  
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.IEntry.ExtendedProperties">
+	<summary>
+ Dictionary of key/value pairs to record. 
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.IEntry.Severity">
+	<summary>
+ Log entry severity as a Severity enumeration. (Unspecified, Information, Warning or Error).  
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.IEntry.Message">
+	<summary>
+ Message body to log. Value from ToString() method from message object.
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.IEntry.Priority">
+	<summary>
+ Importance of the log message. Only messages whose priority is between the minimum and maximum priorities (inclusive) will be processed.  
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="T:Compori.Logging.IEntry">
+	<summary>
+ Log Entry Interface 
+ </summary>
+	<remarks>
+ Using an interface makes it much more easy to test the facade and allows to switch to a differnt logging enging in the future.
+ </remarks>
+</member><member name="M:Compori.Logging.IWriter.Write(Compori.Logging.IEntry)">
+	<summary>
+ Write a log entry
+ </summary>
+	<param name="entry"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.IWriter.CreateEntry">
+	<summary>
+ Create an entry
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="T:Compori.Logging.IWriter">
+	<summary>
+ Logwriter Interface 
+ </summary>
+	<remarks>
+ Using an interface makes it much more easy to test the facade and allows to switch to a differnt logging enging in the future.
+ For now the only thing a logwriter must do is to write a log entry.
+ </remarks>
+</member><member name="M:Compori.Logging.ILogger.WithCategories(System.String[])">
+	<summary>
+ Log message will be exposed with those categories
+ </summary>
+	<param name="category">One or more categories to log to</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.ILogger.WithPriority(Compori.Logging.Priority)">
+	<summary>
+ Log message will be exposed with this priority
+ </summary>
+	<param name="priority">A priority of log message</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.ILogger.WithFormat(System.String)">
+	<summary>
+ Log message will use a format string
+ </summary>
+	<param name="format">Used format string for the log message</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.ILogger.WithFormat(System.IFormatProvider,System.String)">
+	<summary>
+ Log message will use a format provider and format string
+ </summary>
+	<param name="formatProvider">A specific format provider for formatting</param>
+	<param name="format">Used format string for the log message</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.ILogger.WithExtendedProperties(System.Collections.Generic.Dictionary{System.String,System.Object})">
+	<summary>
+ Log a message and add extended properties
+ </summary>
+	<param name="properties">A dictionary of other context properties, that will be logged.</param>
+	<returns></returns>
+	<remarks>Be careful using extended property extensively that leads in a greater io load 
+ especially by using log files.</remarks>
+</member><member name="M:Compori.Logging.ILogger.Critical(System.Object[])">
+	<summary>
+ Final verb of a critical log message.
+ </summary>
+	<param name="message">One or more critical messages</param>
+	<remarks>A critical log finally leads into an abort of program execution. 
+ If more than one parameter are specified you must have call <see cref="M:Compori.Logging.ILogger.WithFormat(System.String)">WithFormat</see> prior.</remarks>
+</member><member name="M:Compori.Logging.ILogger.Error(System.Object[])">
+	<summary>
+  Final verb of an error log message
+ </summary>
+	<param name="message">One or more error messages</param>
+	<remarks>An error log should be catchable exception. The program should abort a sub module but not itself.
+ If more than one parameter are specified you must have call <see cref="M:Compori.Logging.ILogger.WithFormat(System.String)">WithFormat</see> prior.</remarks>
+</member><member name="M:Compori.Logging.ILogger.Warning(System.Object[])">
+	<summary>
+ final verb of a warn log message
+ </summary>
+	<param name="message">One or more warning messages</param>
+	<remarks>A warning log should be occur if an something is not as it should be e.g. expected data. 
+ The program should continue or just skip a small amount of code.
+ If more than one parameter are specified you must have call <see cref="M:Compori.Logging.ILogger.WithFormat(System.String)">WithFormat</see> prior.</remarks>
+</member><member name="M:Compori.Logging.ILogger.Information(System.Object[])">
+	<summary>
+ final verb of a information/notice message
+ </summary>
+	<remarks>A information log can be used to log a significate state of program execution e.g. successfully processed 1.234.567 records in 12.3 seconds.
+ If more than one parameter are specified you must have call <see cref="M:Compori.Logging.ILogger.WithFormat(System.String)">WithFormat</see> prior.</remarks>
+</member><member name="M:Compori.Logging.ILogger.Verbose(System.Object[])">
+	<summary>
+ final verb of a verbose (almost everything) message
+ </summary>
+	<param name="message"></param>
+	<remarks>A verbose log can be used to log almost everthing in an execution path.
+ If more than one parameter are specified you must have call <see cref="M:Compori.Logging.ILogger.WithFormat(System.String)">WithFormat</see> prior.</remarks>
+</member><member name="T:Compori.Logging.ILogger">
+	<summary>
+ Interface for this logging facade
+ </summary>
+	<remarks>
+ The Interface provides a fluent call of methods that always ends with a verb e.g. verbose, critical etc.
+ </remarks>
+</member><member name="M:Compori.Logging.EntryImpl.#ctor">
+	<summary>
+ Log entry
+ </summary>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.EntryImpl._Categories">
+	<summary>
+ Delegate to inherited class implementation
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.EntryImpl._ExtendedProperties">
+	<summary>
+ Delegate to inherited class implementation
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.EntryImpl._Message">
+	<summary>
+ Delegate to inherited class implementation
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.EntryImpl._Priority">
+	<summary>
+ Delegate to inherited class implementation
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.EntryImpl._Severity">
+	<summary>
+ Delegate to inherited class implementation
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="T:Compori.Logging.EntryImpl">
+	<summary>
+ For now the log entry object used
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Priority.Lowest">
+	<summary>
+ Lowest Priority
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Priority.Low">
+	<summary>
+ Low Priority
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Priority.Normal">
+	<summary>
+ Normal Priority
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Priority.High">
+	<summary>
+ High Priority
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Priority.Highest">
+	<summary>
+ Highest Priority
+ </summary>
+	<remarks></remarks>
+</member><member name="T:Compori.Logging.Priority">
+	<summary>
+ Logging priority
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.LoggerImpl._writer">
+	<summary>
+ Log Writer
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.LoggerImpl._categories">
+	<summary>
+ An array of category names
+ </summary>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl.#ctor(Compori.Logging.IWriter)">
+	<summary>
+ Creates the log options
+ </summary>
+	<param name="writer"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl.GetFormattedMessage(System.Object[])">
+	<summary>
+ Returns the formated message using format provider and format string
+ </summary>
+	<param name="message"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl._Write(System.String,System.Diagnostics.TraceEventType)">
+	<summary>
+ Writes the log entry
+ </summary>
+	<param name="message"></param>
+	<param name="severity"></param>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.LoggerImpl.Categories">
+	<summary>
+ Returns a list of category names
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl.WithCategories(System.String[])">
+	<summary>
+ Add the given categories to log entry
+ </summary>
+	<param name="category"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.LoggerImpl.Priority">
+	<summary>
+ Sets or gets the priority for current log message
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl.WithPriority(Compori.Logging.Priority)">
+	<summary>
+ Set priority for a log message and returns log options
+ </summary>
+	<param name="priority"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.LoggerImpl.Format">
+	<summary>
+ Sets or gets the log format
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.LoggerImpl.FormatProvider">
+	<summary>
+ Format provider
+ </summary>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl.WithFormat(System.String)">
+	<summary>
+ Log message will use a format string
+ </summary>
+	<param name="format"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl.WithFormat(System.IFormatProvider,System.String)">
+	<summary>
+ Log message will use a format provider and format string
+ </summary>
+	<param name="formatProvider"></param>
+	<param name="format"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.LoggerImpl.ExtendedProperties">
+	<summary>
+ Extended Properties
+ </summary>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl.WithExtendedProperties(System.Collections.Generic.Dictionary{System.String,System.Object})">
+	<summary>
+ Log a message and add extended properties
+ </summary>
+	<param name="properties"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl._Critical(System.Object[])">
+	<summary>
+ Final verb of a critical log message
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl._Error(System.Object[])">
+	<summary>
+  Final verb of a error log message
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl._Warning(System.Object[])">
+	<summary>
+ final verb of a warn log message
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl._Information(System.Object[])">
+	<summary>
+ final verb of a information/notice message
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.LoggerImpl._Verbose(System.Object[])">
+	<summary>
+ final verb of a verbose (almost everything) message
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:Compori.Logging.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:Compori.Logging.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="F:Compori.Logging.Log._writer">
+	<summary>
+ Log writer object
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Log._defaultLog">
+	<summary>
+ Default log object
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Log._namedLogs">
+	<summary>
+ A map with named log objects
+ </summary>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log.#cctor">
+	<summary>
+ Static Class constructor
+ </summary>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.Log.Default">
+	<summary>
+ Returns the default Log object
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log.For(System.Object)">
+	<summary>
+ Returns the log object for a specific object
+ </summary>
+	<param name="obj"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log.For(System.Type)">
+	<summary>
+ Returns the log object for specific type
+ </summary>
+	<param name="type"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Log._typeContext">
+	<summary>
+ Type
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.Log._categories">
+	<summary>
+ An array of category names
+ </summary>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log.#ctor(System.Type)">
+	<summary>
+ Creates a log object
+ </summary>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.Log.Categories">
+	<summary>
+ Returns an array of preset categories
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._GetLoggerInstance">
+	<summary>
+ Returns a logger instance
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.Log.TypeContext">
+	<summary>
+ Returns the type context of logging
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._Write(Compori.Logging.IEntry)">
+	<summary>
+ Writes a log entry
+ </summary>
+	<param name="entry"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._CreateEntry">
+	<summary>
+ Creates a log entry object
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._Critical(System.Object[])">
+	<summary>
+ Delegate
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._Error(System.Object[])">
+	<summary>
+ Delegate
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._Information(System.Object[])">
+	<summary>
+ Delegate
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._Verbose(System.Object[])">
+	<summary>
+ Delegate
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._Warning(System.Object[])">
+	<summary>
+ Delegate
+ </summary>
+	<param name="message"></param>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._WithCategories(System.String[])">
+	<summary>
+ Delegate
+ </summary>
+	<param name="category"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._WithExtendedProperties(System.Collections.Generic.Dictionary{System.String,System.Object})">
+	<summary>
+ Delegate
+ </summary>
+	<param name="properties"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._WithFormat(System.String)">
+	<summary>
+ Delegate
+ </summary>
+	<param name="format"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._WithFormat(System.IFormatProvider,System.String)">
+	<summary>
+ Delegate
+ </summary>
+	<param name="formatProvider"></param>
+	<param name="format"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.Log._WithPriority(Compori.Logging.Priority)">
+	<summary>
+ Delegate
+ </summary>
+	<param name="priority"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="T:Compori.Logging.Log">
+	<summary>
+ Logging Facade
+ </summary>
+	<remarks></remarks>
+</member><member name="F:Compori.Logging.CategoryAttribute._name">
+	<summary>
+ Category names
+ </summary>
+	<remarks></remarks>
+</member><member name="M:Compori.Logging.CategoryAttribute.#ctor(System.String)">
+	<summary>
+ Construct attribute object wird category name
+ </summary>
+	<param name="name">Name of category</param>
+	<remarks></remarks>
+</member><member name="P:Compori.Logging.CategoryAttribute.Name">
+	<summary>
+ Returns the category name
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="T:Compori.Logging.CategoryAttribute">
+	<summary>
+ Attribute that can be applied to a class or a whole assembly to set logging category name
+ </summary>
+	<remarks></remarks>
+</member>
+</members>
+</doc>

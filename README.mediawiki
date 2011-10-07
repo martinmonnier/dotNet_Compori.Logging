@@ -1,0 +1,10 @@
+==Logging Facade==
+
+===Prerequisite===
+
+Add all dlls and xml to your project
+
+===Usage===
+<code>
+Log.For(Me).WithPriority(Priority.Low).Verbose("Hello out there")
+</code>
