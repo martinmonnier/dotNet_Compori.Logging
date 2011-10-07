@@ -62,15 +62,6 @@ Public NotInheritable Class Log
     End Sub
 
     ''' <summary>
-    ''' Creates a log entry object
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Shared Function CreateEntry() As IEntry
-        Return New EntryImpl()
-    End Function
-
-    ''' <summary>
     ''' Returns the default Log object
     ''' </summary>
     ''' <value></value>
@@ -202,13 +193,12 @@ Public NotInheritable Class Log
 
 
 #Region "IWriter Implementation"
-
     ''' <summary>
     ''' Writes a log entry
     ''' </summary>
     ''' <param name="entry"></param>
     ''' <remarks></remarks>
-    Public Sub Write(ByVal entry As IEntry) Implements IWriter.Write
+    Private Sub _Write(ByVal entry As IEntry) Implements IWriter.Write
 
         ' logger is not available
         If _writer Is Nothing Then
@@ -216,8 +206,16 @@ Public NotInheritable Class Log
         End If
 
         ' Add categories        
-        _writer.Write(entry)
+        _writer.Write(CType(entry, LogEntry))
     End Sub
+    ''' <summary>
+    ''' Creates a log entry object
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function _CreateEntry() As IEntry Implements IWriter.CreateEntry
+        Return New EntryImpl()
+    End Function
 
 #End Region
 

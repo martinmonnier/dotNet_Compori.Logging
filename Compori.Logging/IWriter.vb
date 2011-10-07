@@ -14,4 +14,10 @@ Public Interface IWriter
     ''' <remarks></remarks>
     Sub Write(ByVal entry As IEntry)
 
+    ''' <summary>
+    ''' Create an entry
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Function CreateEntry() As IEntry
 End Interface

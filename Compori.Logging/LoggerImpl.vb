@@ -64,7 +64,7 @@
     ''' <remarks></remarks>
     Private Sub _Write(ByVal message As String, ByVal severity As TraceEventType)
 
-        Dim entry As IEntry = Log.CreateEntry()
+        Dim entry As IEntry = _writer.CreateEntry()
         entry.Message = message
         entry.Severity = severity
         entry.Priority = Me.Priority
@@ -77,7 +77,7 @@
             entry.ExtendedProperties = Me.ExtendedProperties
         End If
 
-        _writer.Write(CType(entry, IEntry))
+        _writer.Write(entry)
     End Sub
 
     ''' <summary>

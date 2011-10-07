@@ -9,7 +9,6 @@ Imports Compori.Logging
 <TestClass()> _
 Public Class LoggerImplTest
 
-
     Private testContextInstance As TestContext
 
     '''<summary>
@@ -51,15 +50,16 @@ Public Class LoggerImplTest
     '
 #End Region
 
+#Region "Test ILogger Verbs"
 
     '''<summary>
-    '''Ein Test für "Critical"
+    ''' Test for "Critical"
     '''</summary>
     <TestMethod()> _
     Public Sub CriticalTest()
-
         Dim writer As LogWriterMock = New LogWriterMock()
         Dim target As ILogger = New LoggerImpl(writer)
+
         Dim message As String = "Critical Message"
         target.Critical(message)
 
@@ -72,26 +72,14 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub ErrorTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
-        target.[Error](message)
-        Assert.Inconclusive("Eine Methode, die keinen Wert zurückgibt, kann nicht überprüft werden.")
-    End Sub
+        Dim writer As LogWriterMock = New LogWriterMock()
+        Dim target As ILogger = New LoggerImpl(writer)
 
-    '''<summary>
-    '''Ein Test für "GetFormattedMessage"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub GetFormattedMessageTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
-        Dim expected As String = String.Empty ' TODO: Passenden Wert initialisieren
-        Dim actual As String
-        actual = target.GetFormattedMessage(message)
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
+        Dim message As String = "Error Message"
+        target.Error(message)
+
+        Assert.AreEqual(TraceEventType.Error, writer.LogEntry.Severity)
+        Assert.AreEqual(message, writer.LogEntry.Message)
     End Sub
 
     '''<summary>
@@ -99,11 +87,14 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub InformationTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As LogWriterMock = New LogWriterMock()
+        Dim target As ILogger = New LoggerImpl(writer)
+
+        Dim message As String = "Information Message"
         target.Information(message)
-        Assert.Inconclusive("Eine Methode, die keinen Wert zurückgibt, kann nicht überprüft werden.")
+
+        Assert.AreEqual(TraceEventType.Information, writer.LogEntry.Severity)
+        Assert.AreEqual(message, writer.LogEntry.Message)
     End Sub
 
     '''<summary>
@@ -111,11 +102,14 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub VerboseTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As LogWriterMock = New LogWriterMock()
+        Dim target As ILogger = New LoggerImpl(writer)
+
+        Dim message As String = "Verbose Message"
         target.Verbose(message)
-        Assert.Inconclusive("Eine Methode, die keinen Wert zurückgibt, kann nicht überprüft werden.")
+
+        Assert.AreEqual(TraceEventType.Verbose, writer.LogEntry.Severity)
+        Assert.AreEqual(message, writer.LogEntry.Message)
     End Sub
 
     '''<summary>
@@ -123,158 +117,15 @@ Public Class LoggerImplTest
     '''</summary>
     <TestMethod()> _
     Public Sub WarningTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim message() As Object = Nothing ' TODO: Passenden Wert initialisieren
+        Dim writer As LogWriterMock = New LogWriterMock()
+        Dim target As ILogger = New LoggerImpl(writer)
+
+        Dim message As String = "Warning Message"
         target.Warning(message)
-        Assert.Inconclusive("Eine Methode, die keinen Wert zurückgibt, kann nicht überprüft werden.")
-    End Sub
 
-    '''<summary>
-    '''Ein Test für "WithCategories"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub WithCategoriesTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim category() As String = Nothing ' TODO: Passenden Wert initialisieren
-        Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
-        Dim actual As ILogger
-        actual = target.WithCategories(category)
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
+        Assert.AreEqual(TraceEventType.Warning, writer.LogEntry.Severity)
+        Assert.AreEqual(message, writer.LogEntry.Message)
     End Sub
+#End Region
 
-    '''<summary>
-    '''Ein Test für "WithExtendedProperties"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub WithExtendedPropertiesTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim properties As IDictionary(Of String, Object) = Nothing ' TODO: Passenden Wert initialisieren
-        Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
-        Dim actual As ILogger
-        actual = target.WithExtendedProperties(properties)
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "WithFormat"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub WithFormatTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim formatProvider As IFormatProvider = Nothing ' TODO: Passenden Wert initialisieren
-        Dim format As String = String.Empty ' TODO: Passenden Wert initialisieren
-        Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
-        Dim actual As ILogger
-        actual = target.WithFormat(formatProvider, format)
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "WithFormat"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub WithFormatTest1()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim format As String = String.Empty ' TODO: Passenden Wert initialisieren
-        Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
-        Dim actual As ILogger
-        actual = target.WithFormat(format)
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "WithPriority"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub WithPriorityTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As ILogger = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim priority As Priority = New Priority() ' TODO: Passenden Wert initialisieren
-        Dim expected As ILogger = Nothing ' TODO: Passenden Wert initialisieren
-        Dim actual As ILogger
-        actual = target.WithPriority(priority)
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "Categories"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub CategoriesTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim actual As ICollection(Of String)
-        actual = target.Categories
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "ExtendedProperties"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub ExtendedPropertiesTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim expected As Dictionary(Of String, Object) = Nothing ' TODO: Passenden Wert initialisieren
-        Dim actual As Dictionary(Of String, Object)
-        target.ExtendedProperties = expected
-        actual = target.ExtendedProperties
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "Format"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub FormatTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim expected As String = String.Empty ' TODO: Passenden Wert initialisieren
-        Dim actual As String
-        target.Format = expected
-        actual = target.Format
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "FormatProvider"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub FormatProviderTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim expected As IFormatProvider = Nothing ' TODO: Passenden Wert initialisieren
-        Dim actual As IFormatProvider
-        target.FormatProvider = expected
-        actual = target.FormatProvider
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
-
-    '''<summary>
-    '''Ein Test für "Priority"
-    '''</summary>
-    <TestMethod()> _
-    Public Sub PriorityTest()
-        Dim writer As IWriter = Nothing ' TODO: Passenden Wert initialisieren
-        Dim target As LoggerImpl = New LoggerImpl(writer) ' TODO: Passenden Wert initialisieren
-        Dim expected As Priority = New Priority() ' TODO: Passenden Wert initialisieren
-        Dim actual As Priority
-        target.Priority = expected
-        actual = target.Priority
-        Assert.AreEqual(expected, actual)
-        Assert.Inconclusive("Überprüfen Sie die Richtigkeit dieser Testmethode.")
-    End Sub
 End Class
