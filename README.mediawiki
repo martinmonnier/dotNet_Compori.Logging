@@ -1,4 +1,8 @@
-==Logging Facade vor Microsoft Enterprise Library Logging Block==
+==Logging Facade==
+
+===Prerequisite===
+
+Add all dlls and xml to your project
 
 ===Usage===
 
