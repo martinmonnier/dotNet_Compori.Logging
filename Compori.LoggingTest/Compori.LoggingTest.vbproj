@@ -83,8 +83,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoggerImplTest.vb" />
+    <Compile Include="LogTest.vb" />
     <Compile Include="LogWriterMock.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="TestClassWithCategory.vb" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Compori.Logging\Compori.Logging.vbproj">
